@@ -13,7 +13,7 @@ const User = require('../models/User');
 const Expense = require('../models/Expense');
 const Budget = require('../models/Budget');
 
-const DEMO_EMAIL = 'demo@expensetracker.app';
+const DEMO_EMAIL = 'demo@spendwise.app';
 
 const categories = [
   'Groceries',

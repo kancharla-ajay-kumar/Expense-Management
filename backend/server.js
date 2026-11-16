@@ -22,12 +22,29 @@ const app = express();
 
 // --- Security & parsing middleware ---
 app.use(helmet());
+
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(',').map((u) => u.trim().replace(/\/$/, ''))
+  : ['http://localhost:5173', 'http://localhost:3000'];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const normalized = origin.replace(/\/$/, '');
+      if (
+        allowedOrigins.includes(normalized) ||
+        process.env.NODE_ENV !== 'production' ||
+        normalized.endsWith('.vercel.app')
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
+
 app.use(express.json({ limit: '10kb' }));
 app.use(mongoSanitize());
 app.use(apiLimiter);
@@ -36,8 +53,12 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
-// --- Routes ---
-app.get('/api/health', (req, res) => res.json({ success: true, message: 'API is healthy' }));
+// --- Health and root status routes ---
+app.get('/', (req, res) => res.json({ success: true, name: 'SpendWise API', status: 'running' }));
+app.get('/health', (req, res) => res.json({ success: true, message: 'SpendWise API is healthy' }));
+app.get('/api/health', (req, res) => res.json({ success: true, message: 'SpendWise API is healthy' }));
+
+// --- API Routes ---
 app.use('/api/auth', authRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/budgets', budgetRoutes);

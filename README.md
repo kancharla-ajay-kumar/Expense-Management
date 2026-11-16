@@ -1,181 +1,168 @@
-# Ledgerly — MERN Expense Tracker
+# SpendWise — Personal Finance and Expense Management System
 
-A full-stack expense & income management app built with **MongoDB, Express, React and Node (MERN)**. It has a proper JWT auth system with server-side validation, an interactive charts-based dashboard, monthly budgets with overspend alerts, CSV export, and a light/dark, fully responsive UI.
+A full-stack modern personal finance and expense management application built with the **MERN Stack (MongoDB, Express.js, React, Node.js)**. SpendWise empowers users to manage their income and expenses, monitor monthly budgets with proactive alerts, visualize financial patterns through interactive analytics, and track their savings in multiple currencies.
 
-![stack](https://img.shields.io/badge/stack-MERN-2F6F4E) ![license](https://img.shields.io/badge/license-MIT-informational)
+Developed and customized by **[Kancharla Ajay Kumar](https://github.com/kancharla-ajay-kumar)** as a practical MERN stack demonstration project, based on the open-source foundation by **[daniyalnova](https://github.com/daniyalnova/Expense-Management)**.
 
 ---
 
 ## ✨ Features
 
-**Core (requested)**
-- Full authentication — register/login with JWT, bcrypt-hashed passwords, and input validation on both the client (react-hook-form) and server (express-validator)
-- Add, edit, delete expenses with categories like *Groceries*, *Utilities*, *Rent*, *Transportation*, etc.
-- Interactive dashboard with charts: category breakdown (pie), income vs. expense (bar), net savings trend (area) — all built with Recharts and powered by MongoDB aggregation pipelines
-- Light / dark mode with no flash-of-wrong-theme, persisted per browser, and fully responsive layout (mobile drawer nav, stacked cards, responsive tables)
-
-**Added on top, because a tracker is more useful with these**
-- **Income tracking**, not just expenses — see true net balance, not just spend
-- **Monthly budgets per category** with progress bars and a 3-state status (on track / nearing limit / over budget)
-- **Recurring transaction flag** (weekly/biweekly/monthly/yearly) for bills and subscriptions
-- **Powerful transaction list** — search, filter by type/category/date range, sort, pagination
-- **CSV export** of all transactions
-- **Multi-currency support** (USD, EUR, GBP, PKR, INR, CAD, AUD, JPY) with proper `Intl` formatting
-- **Rate limiting** on auth endpoints + input sanitization (`express-mongo-sanitize`) + `helmet` security headers
-- **Seed script** to populate a demo account with 6 months of realistic sample data
-- Toast notifications, empty states, loading states, and confirm-before-delete dialogs throughout
+- **Secure Authentication**: User registration and login powered by JSON Web Tokens (JWT) and `bcryptjs` password hashing, backed by client and server-side validation.
+- **Income & Expense Tracking**: Full CRUD management of financial transactions categorized across groceries, utilities, rent, dining, freelance, salary, and more.
+- **Interactive Visual Analytics**: Dashboard visualizations powered by Recharts and MongoDB aggregation pipelines:
+  - Monthly Income vs. Expense bar comparisons
+  - Category breakdown pie chart
+  - 12-month net savings trend area chart
+- **Smart Monthly Budgets**: Category-level budgets with spend tracking and dynamic 3-tier status alerts (On Track, Approaching Limit, Over Budget).
+- **Data Export**: Instant one-click CSV export of transaction records.
+- **Multi-Currency Support**: Native currency formatting for USD, EUR, GBP, INR, CAD, AUD, JPY, and PKR using the `Intl` API.
+- **Responsive & Themed UI**: Designed with Tailwind CSS, supporting seamless light and dark mode toggling with zero flash-of-unstyled-content.
+- **Robust Security**: Protected with `helmet` security headers, `express-rate-limit` brute-force protection, MongoDB query sanitization (`express-mongo-sanitize`), and user-isolated database queries.
 
 ---
 
-## 🧱 Tech stack
+## 🧱 Architecture & Tech Stack
 
-| Layer      | Tech |
-|------------|------|
-| Frontend   | React 18 (Vite), React Router v6, Tailwind CSS, Recharts, React Hook Form, Axios, React Toastify, Lucide icons |
-| Backend    | Node.js, Express, Mongoose |
-| Database   | MongoDB |
-| Auth       | JWT (jsonwebtoken) + bcryptjs |
-| Validation | express-validator (server), react-hook-form (client) |
-| Security   | helmet, express-rate-limit, express-mongo-sanitize, cors |
-
----
-
-## 📁 Project structure
+| Layer | Technologies |
+|---|---|
+| **Frontend** | React 18, Vite, React Router v6, Tailwind CSS, Recharts, React Hook Form, Axios, Lucide Icons, React Toastify |
+| **Backend** | Node.js, Express.js, Mongoose, Express Validator, Express Async Handler |
+| **Database** | MongoDB Atlas (Cloud) / Local MongoDB |
+| **Authentication** | JWT (jsonwebtoken) & bcryptjs |
+| **Security** | Helmet, Express Rate Limit, Express Mongo Sanitize, CORS |
 
 ```
-expense-tracker-mern/
+SpendWise/
 ├── backend/
-│   ├── config/db.js              # MongoDB connection
-│   ├── controllers/              # Route logic (auth, expenses, budgets)
-│   ├── middleware/                # auth guard, validation, error handler, rate limiter
-│   ├── models/                    # User, Expense, Budget (Mongoose schemas)
-│   ├── routes/                    # /api/auth, /api/expenses, /api/budgets, /api/meta
-│   ├── utils/                     # token generation, shared constants, seed script
-│   └── server.js
-└── frontend/
-    ├── src/
-    │   ├── api/axios.js           # axios instance with JWT + 401 interceptors
-    │   ├── components/            # ui/, layout/, auth/, dashboard/, expenses/, budget/
-    │   ├── context/                # AuthContext, ThemeContext, DataContext
-    │   ├── pages/                  # Dashboard, Expenses, Budget, Profile, Login, Register
-    │   └── utils/helpers.js
-    └── index.html
+│   ├── config/db.js              # MongoDB Atlas connection handler
+│   ├── controllers/              # Route controllers (auth, expenses, budgets)
+│   ├── middleware/               # JWT auth guard, validators, rate limiters, error handling
+│   ├── models/                   # Mongoose schemas: User, Expense, Budget
+│   ├── routes/                   # API routes: /api/auth, /api/expenses, /api/budgets, /api/meta
+│   ├── utils/                    # JWT generator, constants, demo seed script
+│   └── server.js                 # Express server entry point
+├── frontend/
+│   ├── public/                   # Favicon and PWA manifest
+│   ├── src/
+│   │   ├── api/axios.js          # Centralized Axios client with JWT interceptor
+│   │   ├── components/           # UI components, layout, dashboard widgets, modal forms
+│   │   ├── context/              # AuthContext, ThemeContext, DataContext
+│   │   ├── pages/                # Dashboard, Expenses, Budget, Profile, Login, Register, NotFound
+│   │   └── utils/helpers.js      # Formatting helpers, color palettes, error parsers
+│   ├── vercel.json               # SPA routing rewrite configuration for Vercel
+│   └── vite.config.js            # Vite build and development proxy configuration
 ```
 
 ---
 
-## 🚀 Getting started
+## 🔐 Environment Variables
+
+### Backend (`backend/.env`)
+
+| Variable | Description | Example / Default |
+|---|---|---|
+| `MONGO_URI` | MongoDB Atlas or local connection string | `mongodb+srv://<user>:<password>@cluster.mongodb.net/spendwise` |
+| `JWT_SECRET` | Strong random secret key for signing JWTs | Generated random 64-character string |
+| `JWT_EXPIRES_IN` | Token expiration period | `7d` |
+| `CLIENT_URL` | Allowed frontend URL(s) for CORS | `http://localhost:5173` or deployed Vercel URL |
+| `PORT` | Backend server port | `5000` (auto-assigned on Render) |
+| `NODE_ENV` | Environment mode | `development` or `production` |
+
+### Frontend (`frontend/.env`)
+
+| Variable | Description | Example / Default |
+|---|---|---|
+| `VITE_API_URL` | Base API URL pointing to the backend | `/api` (local proxy) or `https://<render-app>.onrender.com/api` |
+
+---
+
+## 🚀 Local Development Setup
 
 ### Prerequisites
-- Node.js 18+
-- MongoDB running locally, or a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster
+- Node.js (v18+)
+- MongoDB Atlas account or local MongoDB instance
 
-### 1. Backend setup
-
+### 1. Backend Setup
 ```bash
 cd backend
 npm install
 cp .env.example .env
+# Edit .env with your MONGO_URI and JWT_SECRET
+npm run dev        # Starts server on http://localhost:5000 with nodemon
 ```
 
-Edit `.env` and set:
-- `MONGO_URI` — your MongoDB connection string
-- `JWT_SECRET` — any long random string (e.g. `openssl rand -hex 32`)
-- `CLIENT_URL` — the frontend's URL (defaults to `http://localhost:5173`)
-
-Start the API:
-
+Optional demo data seeding:
 ```bash
-npm run dev        # nodemon, auto-restarts on changes
-# or
-npm start           # plain node
+npm run seed       # Populates sample demo account: demo@spendwise.app / Demo1234
 ```
 
-The API runs on `http://localhost:5000` by default. Visit `http://localhost:5000/api/health` to confirm it's up.
-
-**Optional — seed demo data:**
-
+### 2. Frontend Setup
 ```bash
-npm run seed
-```
-
-This creates a demo account (`demo@expensetracker.app` / `Demo1234`) with 6 months of sample income/expenses and a few budgets, so the dashboard isn't empty on first look.
-
-### 2. Frontend setup
-
-In a second terminal:
-
-```bash
-cd frontend
+cd ../frontend
 npm install
-cp .env.example .env   # optional — defaults already work with the Vite proxy
-npm run dev
+npm run dev        # Starts Vite dev server on http://localhost:5173
 ```
 
-Open `http://localhost:5173`. The Vite dev server proxies `/api` requests to `http://localhost:5000`, so no extra CORS setup is needed locally.
+---
 
-### 3. Log in
+## 🔌 REST API Endpoints
 
-- Register a new account, **or**
-- Run the backend seed script and log in with `demo@expensetracker.app` / `Demo1234`
+All endpoints are prefixed with `/api`. Protected routes require `Authorization: Bearer <token>`.
+
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| `GET` | `/health` | Public | Service health check |
+| `POST` | `/auth/register` | Public | Register new user account |
+| `POST` | `/auth/login` | Public | Authenticate user & issue JWT |
+| `GET` | `/auth/me` | Private | Retrieve current user profile |
+| `PUT` | `/auth/profile` | Private | Update user details & currency preferences |
+| `PUT` | `/auth/password` | Private | Change user password |
+| `GET` | `/expenses` | Private | Query transactions with pagination, filters & search |
+| `POST` | `/expenses` | Private | Create transaction (income or expense) |
+| `GET` | `/expenses/:id` | Private | Get single transaction |
+| `PUT` | `/expenses/:id` | Private | Update transaction |
+| `DELETE` | `/expenses/:id` | Private | Remove transaction |
+| `GET` | `/expenses/stats` | Private | Aggregate dashboard analytics & 12-month trend |
+| `GET` | `/expenses/export` | Private | Export all transactions to CSV file |
+| `GET` | `/budgets` | Private | Retrieve monthly budgets with current spend |
+| `POST` | `/budgets` | Private | Set or update category budget |
+| `DELETE` | `/budgets/:id` | Private | Delete category budget |
+| `GET` | `/meta` | Public/Auth | Category enums, payment methods & currency options |
 
 ---
 
-## 🔌 API overview
+## 🌐 Production Deployment
 
-All routes are prefixed with `/api`. Protected routes require `Authorization: Bearer <token>`.
+### Backend on Render
+1. Create a new **Web Service** on [Render](https://render.com/).
+2. Connect your GitHub repository: `https://github.com/kancharla-ajay-kumar/Expense-Management`.
+3. Configure settings:
+   - **Root Directory**: `backend`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+4. Set Environment Variables:
+   - `MONGO_URI`: Your MongoDB Atlas connection URI
+   - `JWT_SECRET`: Random 32+ character string
+   - `NODE_ENV`: `production`
+   - `CLIENT_URL`: Your Vercel frontend URL
+5. Deploy and note your Render Web Service URL.
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| POST | `/auth/register` | Create an account |
-| POST | `/auth/login` | Log in, returns JWT |
-| GET | `/auth/me` | Current user profile *(protected)* |
-| PUT | `/auth/profile` | Update name/currency/income goal *(protected)* |
-| PUT | `/auth/password` | Change password *(protected)* |
-| GET | `/expenses` | List transactions — supports `type`, `category`, `startDate`, `endDate`, `search`, `sortBy`, `order`, `page`, `limit` |
-| POST | `/expenses` | Create a transaction |
-| GET | `/expenses/:id` | Get one transaction |
-| PUT | `/expenses/:id` | Update a transaction |
-| DELETE | `/expenses/:id` | Delete a transaction |
-| GET | `/expenses/stats` | Dashboard aggregates: monthly totals, category breakdown, 12-month trend, recent transactions |
-| GET | `/expenses/export` | Download all transactions as CSV |
-| GET | `/budgets` | List budgets with current-month spend & status |
-| POST | `/budgets` | Create/update a budget for a category |
-| DELETE | `/budgets/:id` | Delete a budget |
-| GET | `/meta` | Category/payment-method/currency enums used to build dropdowns |
-
----
-
-## 🎨 Design notes
-
-The UI uses a warm "ledger" palette (paper background, ink text, deep green brand color) with **Space Grotesk** for headings/numbers and **Inter** for body text. Income and expenses always use the same semantic colors (green/rust) across every chart, badge and list so the app stays easy to scan at a glance. Both themes are implemented with CSS custom properties, so adding a new accent or adjusting contrast only requires editing `src/index.css`.
+### Frontend on Vercel
+1. Import the repository on [Vercel](https://vercel.com/).
+2. Configure settings:
+   - **Root Directory**: `frontend`
+   - **Framework Preset**: `Vite`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+3. Set Environment Variable:
+   - `VITE_API_URL`: Your Render backend URL (e.g., `https://spendwise-api.onrender.com/api`)
+4. Deploy and note your live Vercel domain.
 
 ---
 
-## 🔒 Security notes
+## 📄 License & Attribution
 
-- Passwords are hashed with bcrypt (12 salt rounds) and never returned by the API
-- JWTs expire after 7 days by default (`JWT_EXPIRES_IN` in `.env`)
-- All write endpoints validate and sanitize input server-side — the frontend validation is a UX convenience, not the source of truth
-- Auth endpoints are rate-limited to slow down brute-force attempts
-- Every expense/budget query is scoped to `req.user._id`, so users can only ever see or modify their own data
-
----
-
-## 📦 Building for production
-
-```bash
-# Backend — just run with NODE_ENV=production and a process manager (pm2, etc.)
-cd backend && NODE_ENV=production npm start
-
-# Frontend — produces a static build in frontend/dist
-cd frontend && npm run build
-```
-
-Serve `frontend/dist` with any static host (Vercel, Netlify, nginx...) and point `VITE_API_URL` at your deployed backend URL before building.
-
----
-
-## License
-
-MIT — do whatever you'd like with this as a starting point for your own project.
+- **Original Project**: [Expense-Management](https://github.com/daniyalnova/Expense-Management) by [daniyalnova](https://github.com/daniyalnova).
+- **Customizations & Maintenance**: [Kancharla Ajay Kumar](https://github.com/kancharla-ajay-kumar).
+- **License**: Released under the [MIT License](LICENSE).

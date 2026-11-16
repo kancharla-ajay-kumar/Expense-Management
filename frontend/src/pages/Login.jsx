@@ -13,14 +13,14 @@ export default function Login() {
           <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-control bg-brand text-white">
             <Wallet size={22} />
           </div>
-          <h1 className="font-display text-2xl font-semibold text-ink">Welcome back</h1>
-          <p className="mt-1 text-sm text-ink-muted">Sign in to keep tracking your money.</p>
+          <h1 className="font-display text-2xl font-semibold text-ink">Welcome to SpendWise</h1>
+          <p className="mt-1 text-sm text-ink-muted">Personal Finance and Expense Management System</p>
         </div>
         <div className="rounded-card border border-border bg-surface p-6 shadow-card">
           <LoginForm />
         </div>
         <p className="mt-6 text-center text-xs text-ink-muted">
-          Demo login: demo@expensetracker.app / Demo1234 (after running the seed script)
+          Demo account: demo@spendwise.app / Demo1234
         </p>
       </div>
     </div>

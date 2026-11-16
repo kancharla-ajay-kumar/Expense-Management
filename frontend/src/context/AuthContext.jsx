@@ -5,10 +5,10 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('ledgerly-user');
+    const saved = localStorage.getItem('spendwise-user') || localStorage.getItem('ledgerly-user');
     return saved ? JSON.parse(saved) : null;
   });
-  const [token, setToken] = useState(() => localStorage.getItem('ledgerly-token'));
+  const [token, setToken] = useState(() => localStorage.getItem('spendwise-token') || localStorage.getItem('ledgerly-token'));
   const [loading, setLoading] = useState(true);
 
   // On mount, if we have a token, verify it and refresh the user profile.
@@ -21,10 +21,12 @@ export function AuthProvider({ children }) {
       try {
         const { data } = await api.get('/auth/me');
         setUser(data.user);
-        localStorage.setItem('ledgerly-user', JSON.stringify(data.user));
+        localStorage.setItem('spendwise-user', JSON.stringify(data.user));
       } catch {
         setToken(null);
         setUser(null);
+        localStorage.removeItem('spendwise-token');
+        localStorage.removeItem('spendwise-user');
         localStorage.removeItem('ledgerly-token');
         localStorage.removeItem('ledgerly-user');
       } finally {
@@ -36,8 +38,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   const persistSession = (newToken, newUser) => {
-    localStorage.setItem('ledgerly-token', newToken);
-    localStorage.setItem('ledgerly-user', JSON.stringify(newUser));
+    localStorage.setItem('spendwise-token', newToken);
+    localStorage.setItem('spendwise-user', JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
   };
@@ -55,6 +57,8 @@ export function AuthProvider({ children }) {
   };
 
   const logout = useCallback(() => {
+    localStorage.removeItem('spendwise-token');
+    localStorage.removeItem('spendwise-user');
     localStorage.removeItem('ledgerly-token');
     localStorage.removeItem('ledgerly-user');
     setToken(null);
@@ -63,7 +67,7 @@ export function AuthProvider({ children }) {
 
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
-    localStorage.setItem('ledgerly-user', JSON.stringify(updatedUser));
+    localStorage.setItem('spendwise-user', JSON.stringify(updatedUser));
   };
 
   return (

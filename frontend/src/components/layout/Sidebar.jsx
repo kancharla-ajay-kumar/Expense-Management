@@ -42,7 +42,9 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
           <div className="flex h-9 w-9 items-center justify-center rounded-control bg-brand text-white">
             <Wallet size={18} />
           </div>
-          <span className="font-display text-lg font-semibold text-ink">Ledgerly</span>
+          <div>
+            <span className="font-display text-lg font-semibold text-ink">SpendWise</span>
+          </div>
         </div>
         {NavItems}
       </aside>
@@ -72,7 +74,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
               <div className="flex h-9 w-9 items-center justify-center rounded-control bg-brand text-white">
                 <Wallet size={18} />
               </div>
-              <span className="font-display text-lg font-semibold text-ink">Ledgerly</span>
+              <span className="font-display text-lg font-semibold text-ink">SpendWise</span>
             </div>
             <button
               onClick={onCloseMobile}

@@ -28,7 +28,7 @@ export default function RegisterForm() {
     setSubmitting(true);
     try {
       await registerUser(values);
-      toast.success('Account created — welcome to Ledgerly!');
+      toast.success('Account created — welcome to SpendWise!');
       navigate('/', { replace: true });
     } catch (error) {
       toast.error(getErrorMessage(error));
