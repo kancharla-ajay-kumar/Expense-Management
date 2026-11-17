@@ -1,10 +1,23 @@
 import axios from 'axios';
 
-const rawBase = import.meta.env.VITE_API_URL || '/api';
-const baseURL = rawBase.endsWith('/api') ? rawBase : `${rawBase.replace(/\/$/, '')}/api`;
+const getBaseURL = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl) {
+    return envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`;
+  }
+  // If deployed on Vercel or any remote origin without build-time VITE_API_URL, default to live Render backend
+  if (
+    typeof window !== 'undefined' &&
+    window.location.hostname !== 'localhost' &&
+    window.location.hostname !== '127.0.0.1'
+  ) {
+    return 'https://expense-management-xswk.onrender.com/api';
+  }
+  return '/api';
+};
 
 const api = axios.create({
-  baseURL,
+  baseURL: getBaseURL(),
   headers: { 'Content-Type': 'application/json' },
 });
 
