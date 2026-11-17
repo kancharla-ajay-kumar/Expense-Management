@@ -4,9 +4,13 @@ const ThemeContext = createContext(null);
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem('spendwise-theme') || localStorage.getItem('ledgerly-theme');
-    if (saved) return saved;
-    return 'light';
+    try {
+      const saved = localStorage.getItem('spendwise-theme') || localStorage.getItem('ledgerly-theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+      return 'light';
+    } catch {
+      return 'light';
+    }
   });
 
   useEffect(() => {

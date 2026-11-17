@@ -5,10 +5,21 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('spendwise-user') || localStorage.getItem('ledgerly-user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('spendwise-user') || localStorage.getItem('ledgerly-user');
+      if (!saved || saved === 'undefined' || saved === 'null') return null;
+      return JSON.parse(saved);
+    } catch {
+      localStorage.removeItem('spendwise-user');
+      localStorage.removeItem('ledgerly-user');
+      return null;
+    }
   });
-  const [token, setToken] = useState(() => localStorage.getItem('spendwise-token') || localStorage.getItem('ledgerly-token'));
+  const [token, setToken] = useState(() => {
+    const t = localStorage.getItem('spendwise-token') || localStorage.getItem('ledgerly-token');
+    if (!t || t === 'undefined' || t === 'null') return null;
+    return t;
+  });
   const [loading, setLoading] = useState(true);
 
   // On mount, if we have a token, verify it and refresh the user profile.
