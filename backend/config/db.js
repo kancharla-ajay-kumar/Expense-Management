@@ -17,7 +17,7 @@ const connectDB = async () => {
     return;
   }
 
-  // Clean and sanitize the connection string (remove accidental quotes, spaces, or prefix)
+  // Clean and sanitize the connection string (remove accidental quotes, spaces, prefix, or placeholder brackets)
   let mongoUri = rawUri.trim();
   if (
     (mongoUri.startsWith('"') && mongoUri.endsWith('"')) ||
@@ -28,6 +28,12 @@ const connectDB = async () => {
   if (mongoUri.startsWith('MONGO_URI=')) {
     mongoUri = mongoUri.replace(/^MONGO_URI=/, '').trim();
   }
+
+  // Automatically remove accidental < and > placeholder brackets (e.g. <username>:<password>)
+  mongoUri = mongoUri.replace(/[<>]/g, '').trim();
+
+  const maskedUri = mongoUri.replace(/:([^@]+)@/, ':****@');
+  console.log(`Connecting to MongoDB: ${maskedUri}`);
 
   isConnecting = true;
   try {
@@ -40,11 +46,11 @@ const connectDB = async () => {
   } catch (error) {
     isConnecting = false;
     console.error(`MongoDB connection error: ${error.message}`);
-    console.error(`Received URI starts with: "${mongoUri.slice(0, 16)}..."`);
     console.error(
-      '-> ACTION REQUIRED: In MongoDB Atlas (cloud.mongodb.com):\n' +
-      '   1. Go to Network Access -> Add IP Address -> Select "Allow Access from Anywhere" (0.0.0.0/0).\n' +
-      '   2. In Database Access -> Check that the database user has readWrite permissions and correct password.'
+      '-> TROUBLESHOOTING CHECKLIST:\n' +
+      '   1. Network Access: Ensure IP 0.0.0.0/0 (anywhere) is Active in MongoDB Atlas Network Access.\n' +
+      '   2. Database Access: Confirm database user exists, has readWrite role, and correct password.\n' +
+      '   3. Connection String: Check MONGO_URI in Render environment variables.'
     );
     // Retry connection after 5 seconds instead of crashing the server process
     setTimeout(connectDB, 5000);
