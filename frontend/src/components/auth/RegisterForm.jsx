@@ -27,7 +27,11 @@ export default function RegisterForm() {
   const onSubmit = async (values) => {
     setSubmitting(true);
     try {
-      await registerUser(values);
+      await registerUser({
+        ...values,
+        name: values.name.trim(),
+        email: values.email.trim(),
+      });
       toast.success('Account created — welcome to SpendWise!');
       navigate('/', { replace: true });
     } catch (error) {

@@ -22,7 +22,7 @@ export default function LoginForm() {
   const onSubmit = async (values) => {
     setSubmitting(true);
     try {
-      await login(values.email, values.password);
+      await login(values.email.trim(), values.password);
       toast.success('Welcome back!');
       navigate(location.state?.from?.pathname || '/', { replace: true });
     } catch (error) {

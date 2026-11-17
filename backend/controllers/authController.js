@@ -7,14 +7,20 @@ const generateToken = require('../utils/generateToken');
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, currency } = req.body;
+  const cleanEmail = (email || '').trim().toLowerCase();
 
-  const existingUser = await User.findOne({ email: email.toLowerCase() });
+  const existingUser = await User.findOne({ email: cleanEmail });
   if (existingUser) {
     res.status(400);
     throw new Error('An account with this email already exists');
   }
 
-  const user = await User.create({ name, email, password, currency });
+  const user = await User.create({
+    name: (name || '').trim(),
+    email: cleanEmail,
+    password,
+    currency,
+  });
 
   res.status(201).json({
     success: true,
@@ -28,8 +34,9 @@ const registerUser = asyncHandler(async (req, res) => {
 // @access  Public
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  const cleanEmail = (email || '').trim().toLowerCase();
 
-  const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
+  const user = await User.findOne({ email: cleanEmail }).select('+password');
   if (!user || !(await user.matchPassword(password))) {
     res.status(401);
     throw new Error('Invalid email or password');

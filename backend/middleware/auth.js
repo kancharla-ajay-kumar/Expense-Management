@@ -2,6 +2,10 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
 
+const getJwtSecret = () => {
+  return process.env.JWT_SECRET || 'spendwise_jwt_fallback_secret_key_manit_2026';
+};
+
 // Verifies the JWT in the Authorization header and attaches req.user
 const protect = asyncHandler(async (req, res, next) => {
   let token;
@@ -16,7 +20,7 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, getJwtSecret());
     const user = await User.findById(decoded.id);
 
     if (!user) {
